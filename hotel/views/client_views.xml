@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_client_form" model="ir.ui.view">
+            <field name="name">client.form</field>
+            <field name="model">hotel.client</field>
+            <field name="arch" type="xml">
+                <form string="Client">
+                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div id="o_client_container"><div id="o_client_main">
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Client's Name" required="True"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page name="public" string="Personal Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="identity_no"
+                                            context="{'show_identity_no': 1}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="name"/>
+                                        <field name="surname"/>
+                                        <field name="age"/>
+                                        <field name="adr"/>
+                                        <field name="email" />
+                                        <field name="phone"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                             <page name="public" string="Reservation History">
+                                <field name="reservation_client">
+                                    <tree>
+                                        <field name="client_ids"/>
+                                        <field name="room_ids"/>
+                                        <field name="checkin"/>
+                                        <field name="checkout"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                         </div>
+                        </div>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+    <record id="view_client_tree" model="ir.ui.view">
+            <field name="name">client.tree</field>
+            <field name="model">hotel.client</field>
+            <field name="arch" type="xml">
+                <tree string="Client">
+                         <field name="identity_no"/>
+                         <field name="name"/>
+                         <field name="surname"/>
+                          <field name="age"/>
+                         <field name="adr"/>
+                         <field name="phone"/>
+                         <field name="email"/>
+                </tree>
+            </field>
+        </record>
+
+      <record id="view_client_search" model="ir.ui.view">
+            <field name="name">client.search</field>
+            <field name="model">hotel.client</field>
+            <field name="arch" type="xml">
+                <search string="Client">
+                         <field name="identity_no"/>
+                         <field name="name"/>
+                         <field name="surname"/>
+                         <field name="age"/>
+                         <field name="adr"/>
+                         <field name="phone"/>
+                         <field name="email"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="open_view_client_tree" model="ir.actions.act_window">
+            <field name="name">Client</field>
+            <field name="res_model">hotel.client</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_client_tree"/>
+            <field name="search_view_id" ref="view_client_search"/>
+        </record>
+
+         <menuitem
+            id="main_menu_client" name="Client" sequence="200"
+            web_icon="hotel,static/description/.client.png"/>
+
+       <menuitem
+            id="menu_open_view_client"
+            action="open_view_client_tree"
+            parent="main_menu_client"
+            sequence="2"/>
+
+</odoo>

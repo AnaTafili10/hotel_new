@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+       <!-- ======== Reservation ======== -->
+     Form view of hotel reservation
+    <record id="view_reservation_form" model="ir.ui.view">
+        <field name="name">reservation.form</field>
+        <field name="model">reservation.room</field>
+        <field name="arch" type="xml">
+            <form string="Reservation">
+                 <header>
+                     <button string="draft" type="object" name="draft" />
+                     <button string="confirm" type="object" name="confirm" attrs="{'invisible': [('state','!=','draft')]}"/>
+                     <button string="cancel" type="object" name="cancel" attrs="{'invisible': ['|','|',('state','=','draft')]}"/>
+                     <button string="done" type="object" name="done" attrs="{'invisible': [('state','!=','done')]}"/>
+                     <field name="state" widget="statusbar" />
+                 </header>
+                <sheet>
+                    <h1>
+                        <field name="reservation_ids" class="oe_inline" />
+                    </h1>
+                    <group>
+                        <group >
+                            <field name="checkin" />
+                            <field name="checkout" />
+                            <field name = "state"/>
+                            <field name = "status"/>
+                            <field name= "category_id"/>
+                            <field name = "client_ids"/>
+                            <div>
+                            <h2>Please select an extra service!</h2>
+                            </div>
+                            <field name = "internet"/>
+                            <field name = "laundry" />
+                            <field name = "safe_box"/>
+                            <field name = "suitcase_storage"/>
+                            <field name = "spa"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>/
+    </record>
+
+    <!-- Tree view of hotel reservation -->
+    <record id="view_reservation_tree" model="ir.ui.view">
+        <field name="name">reservation.tree</field>
+        <field name="model">reservation.room</field>
+        <field name="arch" type="xml">
+            <tree string="Reservation"
+                colors="blue:state == 'draft';gray:state == 'done';lightgray:state == 'cancel';">
+                <field name="reservation_ids" />
+                <field name="checkin" />
+                <field name="checkout" />
+                <field name="state" />
+                <field name = "status"/>
+                <field name="category_id"/>
+                <field name = "client_ids"/>
+                <div>
+                <h3>"Please select for extra service!"</h3>
+                </div>
+                <field name = "internet"/>
+                <field name = "laundry"/>
+                <field name = "safe_box"/>
+                <field name = "suitcase_storage"/>
+                <field name = "spa"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view of hotel reservation -->
+    <record id="view_reservation_search" model="ir.ui.view">
+        <field name="name">reservation.search</field>
+        <field name="model">reservation.room</field>
+        <field name="arch" type="xml">
+            <search string="Reservation">
+                <filter string="Current Reservations"
+                    domain="[('checkout','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('checkin','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]"
+                    help="Current Reservations" />
+                <filter domain="[('state','=','draft')]" string="Draft" />
+                <filter domain="[('state','=','confirm')]" string="Confirm" />
+                <filter domain="[('state','=','cancel')]" string="Cancel" />
+                <filter domain="[('state','=','done')]" string="Done" />
+                <field name="reservation_ids" />
+                <field name="checkin" />
+                <field name="checkout" />
+                <field name="state" />
+                <field name ="status"/>
+                <field name="category_id"/>
+                <field name="client_ids"/>
+                <div>
+                <h4>"Please select for extra service!"</h4>
+                </div>
+                <field name= "internet"/>
+                <field name = "laundry" />
+                <field name = "safe_box"/>
+                <field name = "suitcase_storage"/>
+                <field name = "spa"/>
+                <newline />
+            </search>
+        </field>
+    </record>
+
+    <!--&lt;!&ndash; Graph view of hotel reservation &ndash;&gt;-->
+    <!--<record id="view_reservation_graph" model="ir.ui.view">-->
+        <!--<field name="name">reservation.graph</field>-->
+        <!--<field name="model">reservation.room</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<graph string="Reservation" type="pie">-->
+                <!--<field name="state" />-->
+                <!--<field name="reservation_ids" />-->
+                <!---->
+            <!--</graph>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--&lt;!&ndash; Calendar view of hotel reservation &ndash;&gt;-->
+    <!--<record id="hotel_calendar_view" model="ir.ui.view">-->
+        <!--<field name="name">Room Reservation</field>-->
+        <!--<field name="model">hotel.reservation</field>-->
+        <!--<field name="priority" eval="2" />-->
+        <!--<field name="arch" type="xml">-->
+
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--&lt;!&ndash; gantt view of hotel reservation &ndash;&gt;-->
+    <!--<record id="hotel_gantt_view" model="ir.ui.view">-->
+        <!--<field name="name">hotel.gantt</field>-->
+        <!--<field name="model">hotel.reservation</field>-->
+        <!--<field name="priority" eval="2" />-->
+        <!--<field name="arch" type="xml">-->
+
+        <!--</field>-->
+    <!--</record>-->
+
+     <record id="action_reservation_form" model="ir.actions.act_window">
+        <field name="name">Reservation</field>
+        <field name="res_model">reservation.room</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_reservation_form" />
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+     <record id="action_reservation_tree" model="ir.actions.act_window">
+        <field name="name">Reservation</field>
+        <field name="res_model">reservation.room</field>
+        <field name="view_type">tree</field>
+        <field name="view_id" ref="view_reservation_form" />
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- Action of hotel reservation -->
+    <record id="action_reservation" model="ir.actions.act_window">
+        <field name="name">Reservations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">reservation.room</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="seq_reservation_room" model="ir.sequence">
+            <field name="name">Reservation_sequencer</field>
+            <field name="code">reservation.room</field>
+            <field name="prefix">RZ</field>
+            <field name="padding">3</field>
+        </record>
+
+     <record id="view_reservation_calendar" model="ir.ui.view">
+            <field name="model">reservation.room</field>
+            <field name="arch" type="xml">
+                <calendar date_start="checkin" color="room_ids">
+                    <field name="client_ids"/>
+                    <field name="room_ids"/>
+                </calendar>
+            </field>
+        </record>
+
+    <record id="view_status_form" model="ir.ui.view">
+            <field name="name">status.form</field>
+            <field name="model">reservation.room</field>
+            <field name="arch" type="xml">
+                <form string="Occupied rooms">
+                    <group string="Available rooms">
+                        <group>
+                            <field name="client_ids" invisible="1"/>
+                            <field name="room_ids" domain="[('category', '=', category_id)]"/>
+                            <field name ="category_id"/>
+                        </group>
+                        <group>
+                            <field name="checkin"/>
+                            <field name="checkout"/>
+                            <field name="reservation" attrs="{'invisible': [('reservation', '=', False)]}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+         </record>
+
+    <!--<record id="view_status_tree" model="ir.ui.view">-->
+            <!--<field name="name">status.tree</field>-->
+            <!--<field name="model">reservation.room</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<tree string="Occupied rooms">-->
+                    <!--<field name="client_ids" invisible="1"/>-->
+                    <!--<field name="room_ids"/>-->
+                    <!--<field name="checkin"/>-->
+                    <!--<field name="checkout"/>-->
+                <!--</tree>-->
+            <!--</field>-->
+        <!--</record>-->
+
+    <!--<record id="view_status_search" model="ir.ui.view">-->
+            <!--<field name="name">status.search</field>-->
+            <!--<field name="model">reservation.room</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<search string="Occupied rooms">-->
+                    <!--<field name="client_ids"/>-->
+                    <!--<field name="room_ids"/>-->
+                    <!--<field name="checkin"/>-->
+                    <!--<field name="checkout"/>-->
+                <!--</search>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+    <!--<record id="open_view_status_tree" model="ir.actions.act_window">-->
+            <!--<field name="name">Occupied rooms</field>-->
+            <!--<field name="res_model">reservation.room</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+            <!--<field name="view_id" ref="view_status_tree"/>-->
+            <!--<field name="domain">[('reservation', '=', False)]</field>-->
+            <!--<field name="search_view_id" ref="view_status_search"/>-->
+        <!--</record>-->
+
+     <!--<record id="open_view_status_form" model="ir.actions.act_window.view">-->
+            <!--<field name="res_model">reservation.room</field>-->
+            <!--<field name="view_mode">form</field>-->
+            <!--<field name="view_id" ref="view_status_form" />-->
+            <!--<field name="act_window_id" ref="open_view_status_tree" />-->
+        <!--</record>-->
+
+     <record id="open_view_reservation_calendar" model="ir.actions.act_window">
+            <field name="name">Calendar</field>
+            <field name="res_model">reservation.room</field>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_reservation_calendar"/>
+            <field name="domain">[('reservation', '=', True)]</field>
+        </record>
+    
+   <menuitem
+            id="main_menu_reservation" name="Reservation" sequence="200" web_icon="hotel,static/description/.rsz_reservation.png"/>/>
+
+     <!--<menuitem-->
+            <!--id="menu_open_view_status"-->
+            <!--action="open_view_status_tree"-->
+            <!--parent="main_menu_reservation"-->
+            <!--sequence="2"/>-->
+
+      <record id="open_view_reservation_calendar" model="ir.actions.act_window">
+            <field name="name">Calendar</field>
+            <field name="res_model">reservation.room</field>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_reservation_calendar"/>
+            <field name="domain">[('reservation', '=', True)]</field>
+        </record>
+
+
+     <menuitem
+            id="menu_open_view_calendar"
+            action="open_view_reservation_calendar"
+            parent="main_menu_reservation"
+            sequence="3"/>
+
+
+       <menuitem id="menu_open_reservation_form" name="reservation"
+        action="action_reservation_form" sequence="5" parent="main_menu_reservation" />
+
+</odoo>
